@@ -1,0 +1,94 @@
+.login-section {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2rem 1rem;
+    background-color: var(--bg-primary);
+  }
+
+  .login-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 250px;
+  }
+
+  .back-button {
+    background: none;
+    border: none;
+    color: var(--text-primary);
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .back-button:hover {
+    background-color: var(--hover-bg);
+    color: var(--accent-color);
+  }
+
+  .login-header h1 {
+    color: var(--text-primary);
+  }
+
+  .login-section .middle,
+  .login-section form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    max-width: 250px;
+  }
+
+  .login-section .middle h1 {
+    color: var(--text-primary);
+  }
+
+  .login-section input {
+    width: 100%;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--input-border);
+    outline: none;
+    background-color: var(--input-bg);
+    color: var(--input-text);
+  }
+
+  .login-section input::placeholder {
+    color: var(--placeholder-text);
+  }
+
+  .login-section input[type=submit] {
+    background-color: var(--accent-primary);
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+  }
+
+  .login-section input[type=submit]:hover {
+    background-color: var(--accent-secondary);
+  }
+
+  .login-section p {
+    opacity: 0.7;
+    color: var(--text-secondary);
+  }
+
+  .login-section a {
+    color: var(--accent-primary);
+    text-decoration: none;
+  }
+
+  .login-section a:hover {
+    text-decoration: underline;
+  }

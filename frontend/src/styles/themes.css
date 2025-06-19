@@ -1,0 +1,116 @@
+/* Theme Variables */
+:root {
+  /* Light Theme (default) */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f5f5f5;
+  --bg-tertiary: #ffffff;
+  --text-primary: #000000;
+  --text-secondary: #666666;
+  --text-tertiary: #888888;
+  --accent-primary: #1db954;
+  --accent-secondary: #1ed760;
+  --border-color: #e0e0e0;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --hover-bg: #f8f8f8;
+  --card-bg: #ffffff;
+  --nav-bg: #ffffff;
+  --now-playing-bg: #ffffff;
+  --search-bg: #f5f5f5;
+  --input-bg: #ffffff;
+  --input-border: #e0e0e0;
+  --input-text: #000000;
+  --placeholder-text: #999999;
+}
+
+/* Dark Theme */
+[data-theme="dark"] {
+  --bg-primary: #121212;
+  --bg-secondary: #1e1e1e;
+  --bg-tertiary: #2d2d2d;
+  --text-primary: #ffffff;
+  --text-secondary: #b3b3b3;
+  --text-tertiary: #888888;
+  --accent-primary: #1db954;
+  --accent-secondary: #1ed760;
+  --border-color: #404040;
+  --shadow-color: rgba(0, 0, 0, 0.3);
+  --hover-bg: #2d2d2d;
+  --card-bg: #1e1e1e;
+  --nav-bg: #1e1e1e;
+  --now-playing-bg: #1e1e1e;
+  --search-bg: #2d2d2d;
+  --input-bg: #2d2d2d;
+  --input-border: #404040;
+  --input-text: #ffffff;
+  --placeholder-text: #666666;
+}
+
+/* Global Theme Styles */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+/* Common Theme Classes */
+.theme-bg-primary {
+  background-color: var(--bg-primary);
+}
+
+.theme-bg-secondary {
+  background-color: var(--bg-secondary);
+}
+
+.theme-bg-tertiary {
+  background-color: var(--bg-tertiary);
+}
+
+.theme-text-primary {
+  color: var(--text-primary);
+}
+
+.theme-text-secondary {
+  color: var(--text-secondary);
+}
+
+.theme-text-tertiary {
+  color: var(--text-tertiary);
+}
+
+.theme-border {
+  border-color: var(--border-color);
+}
+
+.theme-shadow {
+  box-shadow: 0 2px 8px var(--shadow-color);
+}
+
+.theme-hover:hover {
+  background-color: var(--hover-bg);
+}
+
+/* Theme Toggle Button */
+.theme-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-primary);
+  transition: background-color 0.2s ease;
+}
+
+.theme-toggle:hover {
+  background-color: var(--hover-bg);
+}
+
+.theme-toggle svg {
+  width: 20px;
+  height: 20px;
+} 

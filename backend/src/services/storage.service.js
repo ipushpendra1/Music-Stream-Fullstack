@@ -10,10 +10,10 @@ var imagekit = new ImageKit({
 
 })
 
-function uploadAudioFileFromStream(fileStream) {
+export function UploadFile(file) {
     return new Promise((resolve, reject) => {
         imagekit.upload({
-            file: fileStream,
+            file: file,
             fileName: "audio-file-" + Date.now() + ".mp3",
             folder: "/audio-files/"
         }, function (error, result) {

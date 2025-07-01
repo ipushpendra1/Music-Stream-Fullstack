@@ -24,3 +24,7 @@ const songSchema = new mongoose.Schema({
    
      
     });
+
+
+    const songModel = mongoose.model("song",songSchema);
+    export default songModel;

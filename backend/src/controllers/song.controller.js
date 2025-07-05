@@ -25,3 +25,45 @@ res.status(201).json({
 
 
 }
+
+export async function getSongs(req,res){
+    const songs = await songModel.find();
+    res.status(200).json({
+        message:"songs fetched successfully",
+        songs:songs
+    })
+}
+
+
+
+export async function getSongById(req,res){
+    const songId = req.params.id;
+    const song = await songModel.findOne({
+        _id:songId
+    })
+    if(!song){
+        return res.status(404).json({
+            message:"song not found"
+        })
+    }
+    res.status(200).json({
+        message:"song fetched successfully",
+        song:song
+    })
+}
+
+
+export async function searchSong(req,res){
+    const text = req.query.text;
+    const song = await songModel.find({
+        title:{
+            $regex:text,
+            $options:"i"
+        },
+        
+    })
+    res.status(200).json({
+        message:"songs fetched successfully",
+        songs:song
+    })
+}

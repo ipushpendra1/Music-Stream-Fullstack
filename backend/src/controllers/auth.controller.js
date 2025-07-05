@@ -14,7 +14,13 @@ export async function registerUser(req, res) {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = await userModel.create({ username, password: hashedPassword });
-    const token = jwt.sign({ id: newUser._id }, JWT_SECRET, { expiresIn: '1d' });
+    const token = jwt.sign({ 
+        id: newUser._id }, 
+        JWT_SECRET, 
+        { expiresIn: '1d' }
+    );
+
+    res.cookie("token",token)
 
     res.status(201).json({
         message: 'User registered successfully', newUser: {
@@ -42,7 +48,13 @@ export async function loginUser(req, res) {
     }
 
 
-    const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '1d' });
+    const token = jwt.sign({
+         id: user._id },
+          JWT_SECRET, 
+          { expiresIn: '1d' }
+        );
+    res.cookie("token",token)
+
     res.status(200).json({
         message: 'User logged in successfully', newUser: {
             id: user._id,

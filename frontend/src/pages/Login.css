@@ -92,3 +92,25 @@
   .login-section a:hover {
     text-decoration: underline;
   }
+
+  .error-message {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    background-color: var(--error-bg, #fef2f2);
+    color: var(--error-text, #dc2626);
+    border: 1px solid var(--error-border, #fecaca);
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    width: 100%;
+  }
+
+  .error-message svg {
+    flex-shrink: 0;
+  }
+
+  .login-section input[type=submit]:disabled {
+    background-color: var(--disabled-bg, #9ca3af);
+    cursor: not-allowed;
+  }

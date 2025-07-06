@@ -1,43 +1,41 @@
-import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
 
-import { registerUser } from '../redux/features/userSlice';
 import ThemeToggle from '../components/ThemeToggle';
 import './Register.css';
+import { Link } from "react-router-dom";
+import axios from 'axios';
 
 const Register = () => {
     const navigate = useNavigate();
-    const dispatch = useDispatch();
-    const [formData, setFormData] = useState({
-        name: '',
-        email: '',
-        password: ''
-    
-
-              
-
-    });
-
-    const handleInputChange = (e) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value
-        });
-    };
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        // Dispatch registration action to Redux store
-        dispatch(registerUser(formData));
-        console.log('Registration successful:', formData);
-        // Navigate to profile page after successful registration
-        navigate('/profile');
-    };
 
     const handleGoBack = () => {
         navigate(-1);
     };
+
+
+    function handleRegister(event){
+        event.preventDefault()
+
+        const username = document.querySelector("#username").value
+        const password = document.querySelector("#password").value
+
+        axios.post("http://localhost:3000/auth/register",{
+            username,password
+        },{
+            withCredentials: true,
+        }).then(response=>{
+            console.log(response.data)
+            navigate("/")
+        })
+    }
+
+
+
+    
+
+
+
+   
 
     return (
         <section className="register-section">
@@ -55,30 +53,12 @@ const Register = () => {
             <div className="middle">
                 <h1>create new account</h1>
 
-                <form onSubmit={handleSubmit}>
-                    <input 
-                        type="text" 
-                        name="name"
-                        placeholder='Name' 
-                        value={formData.name}
-                        onChange={handleInputChange}
-                    />
-                    <input 
-                        type="email" 
-                        name="email"
-                        placeholder='Email' 
-                        value={formData.email}
-                        onChange={handleInputChange}
-                    />
-                    <input 
-                        type="password" 
-                        name="password"
-                        placeholder='Password' 
-                        value={formData.password}
-                        onChange={handleInputChange}
-                    />
+                <form onSubmit={handleRegister} action="">
+                    <input id="username" type="text" placeholder='Username' />
+                    <input id="password" type="password" placeholder="Password"/>
                     <input type="submit" value={"Register"} />
                 </form>
+
             </div>
 
             <p>already have an account ? <Link to="/login">Login</Link></p>

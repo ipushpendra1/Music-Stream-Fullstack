@@ -95,37 +95,20 @@ export const userSlice = createSlice({
     },
     
     loginUser: (state, action) => {
-      const { email, _password } = action.payload;
+      const userData = action.payload;
       
-      // Validate email
-      if (!email) {
-        state.error = 'Email is required';
+      // Validate user data
+      if (!userData || !userData.username) {
+        state.error = 'Invalid user data received';
         return;
       }
       
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(email)) {
-        state.error = 'Please enter a valid email address';
-        return;
-      }
-      
-      // In a real app, you'd validate credentials here
-      // For now, we'll just set a mock user
-      const mockUser = {
-        name: "John Doe",
-        email: email.trim().toLowerCase(),
-        avatar: "https://via.placeholder.com/100x100/4F46E5/FFFFFF?text=JD",
-        joinDate: "January 2024",
-        totalSongs: 15,
-        totalPlaylists: 3
-      };
-      
-      state.user = mockUser;
+      state.user = userData;
       state.isLoggedIn = true;
       state.error = null;
       
       try {
-        localStorage.setItem('user', JSON.stringify(mockUser));
+        localStorage.setItem('user', JSON.stringify(userData));
         localStorage.setItem('isLoggedIn', 'true');
       } catch (error) {
         console.error('Error saving user to localStorage:', error);
@@ -167,29 +150,48 @@ export const userSlice = createSlice({
         return;
       }
       
-      const { name, email, avatar } = action.payload;
+      const userData = action.payload;
       
-      // Validate input
-      if (!name || !email) {
-        state.error = 'Name and email are required';
+      // If it's a complete user object from backend, replace the entire user
+      if (userData.id || userData.username) {
+        const updatedUser = {
+          ...state.user,
+          ...userData
+        };
+        
+        state.user = updatedUser;
+        state.error = null;
+        
+        try {
+          localStorage.setItem('user', JSON.stringify(updatedUser));
+        } catch (error) {
+          console.error('Error updating user profile in localStorage:', error);
+          state.error = 'Failed to save profile changes';
+        }
         return;
       }
       
-      if (name.length < 2 || name.length > 50) {
+      // If it's just profile update data (name, email, avatar)
+      const { name, email, avatar } = userData;
+      
+      // Validate input only if provided
+      if (name && (name.length < 2 || name.length > 50)) {
         state.error = 'Name must be between 2 and 50 characters';
         return;
       }
       
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(email)) {
-        state.error = 'Please enter a valid email address';
-        return;
+      if (email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+          state.error = 'Please enter a valid email address';
+          return;
+        }
       }
       
       const updatedUser = {
         ...state.user,
-        name: name.trim(),
-        email: email.trim().toLowerCase(),
+        ...(name && { name: name.trim() }),
+        ...(email && { email: email.trim().toLowerCase() }),
         ...(avatar && { avatar })
       };
       

@@ -2,8 +2,9 @@ import express from 'express';
 import multer from 'multer';
 import { upload, getSongs, getSongById, searchSong } from "../controllers/song.controller.js";
 import jwt from 'jsonwebtoken';
-const JWT_SECRET = "dfb828bb2bf78502b2c49308097db6cd7ad00d8edf2299ede56b85199ea9397d";
+import dotenv from 'dotenv';
 
+dotenv.config();
 
 const storage = multer.memoryStorage();
 const uploadMiddleware = multer({storage:storage});
@@ -15,11 +16,11 @@ router.use(async (req,res,next)=>{
     const token = req.cookies.token;
     if(!token){
         return res.status(401).json({
-            message:"Please login to upload a song"
+            message:"Please login to  play"
         });
     }
     try{
-        const decoded = jwt.verify(token,JWT_SECRET);
+        const decoded = jwt.verify(token,process.env.JWT_SECRET);
         next();
     }catch(error){
         return res.status(401).json({

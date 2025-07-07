@@ -1,10 +1,13 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Navigation from '../components/Navigation'
 import ThemeToggle from '../components/ThemeToggle'
 import './Search.css'
 import NowPlaying from '../components/NowPlaying'
-import { searchSongs, setCurrentSong, togglePlayPause, selectFilteredSongs, selectCurrentSong, selectIsPlaying } from '../redux/features/songSlice'
+import { setFilteredSongs, setCurrentSong, togglePlayPause, selectFilteredSongs, selectCurrentSong, selectIsPlaying } from '../redux/features/songSlice'
+import { getPosterUrl, handleImageError } from '../utils/imageUtils'
+
+import axios from 'axios'
 
 const Search = () => {
     const dispatch = useDispatch();
@@ -13,10 +16,28 @@ const Search = () => {
     const isPlaying = useSelector(selectIsPlaying);
     const [searchQuery, setSearchQuery] = useState('');
 
+    // Clear search state when component mounts
+    useEffect(() => {
+        setSearchQuery('');
+        dispatch(setFilteredSongs([]));
+    }, [dispatch]);
+
+    // Clear search state when component unmounts
+    useEffect(() => {
+        return () => {
+            setSearchQuery('');
+            dispatch(setFilteredSongs([]));
+        };
+    }, [dispatch]);
+
     const handleSearch = (e) => {
         const query = e.target.value;
+        axios.get(`http://localhost:3000/song/search-songs?text=${query}`, {
+            withCredentials: true
+        }).then((res)=>{
+            dispatch(setFilteredSongs(res.data.songs));
+        })
         setSearchQuery(query);
-        dispatch(searchSongs(query));
     };
 
     const handlePlaySong = (song) => {
@@ -31,10 +52,8 @@ const Search = () => {
                     <ThemeToggle />
                 </div>
                 <div className="search-bar">
-                    <input 
-                        type="text" 
-                        placeholder="Search for songs or artists..." 
-                        value={searchQuery}
+                    <input type="text"   placeholder="Search for songs or artists..." 
+                     value={searchQuery}
                         onChange={handleSearch}
                         className="search-input"
                     />
@@ -45,14 +64,15 @@ const Search = () => {
                     <div className="song-list">
                         {filteredSongs.map(song => (
                             <div 
-                                key={song.id} 
+                                key={song._id} 
                                 className="song-item" 
                                 onClick={() => handlePlaySong(song)}
                             >
                                 <img 
-                                    src={song.image} 
+                                    src={getPosterUrl(song.poster)} 
                                     alt={song.title} 
                                     className="song-image" 
+                                    onError={handleImageError}
                                 />
                                 <div className="song-details">
                                     <div className="song-title">{song.title}</div>

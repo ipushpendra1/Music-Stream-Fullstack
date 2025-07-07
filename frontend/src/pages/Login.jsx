@@ -41,8 +41,6 @@ const Login = () => {
         }
       );
 
-      console.log(response.data);
-      
       // Extract user data from response and dispatch to Redux
       const userData = {
         username: response.data.newUser.username,

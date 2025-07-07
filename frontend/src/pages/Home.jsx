@@ -1,11 +1,13 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import './Home.css'
 import Navigation from '../components/Navigation'
 import NowPlaying from '../components/NowPlaying'
 import ThemeToggle from '../components/ThemeToggle'
-import { setCurrentSong, togglePlayPause, selectSongs, selectCurrentSong, selectIsPlaying } from '../redux/features/songSlice'
+import { setCurrentSong, togglePlayPause, selectSongs, selectCurrentSong, selectIsPlaying, setSongs } from '../redux/features/songSlice'
 import { Link } from 'react-router-dom'
+import axios from 'axios'
+import { getPosterUrl, handleImageError } from '../utils/imageUtils'
 
 const Home = () => {
     const dispatch = useDispatch();
@@ -16,6 +18,18 @@ const Home = () => {
     const handlePlaySong = (song) => {
         dispatch(setCurrentSong(song));
     };
+
+    useEffect(() => {
+        axios.get('http://localhost:3000/song/get-songs',{
+            withCredentials: true,
+        }).then((res)=>{
+            if (res.data.songs && res.data.songs.length > 0) {
+                dispatch(setSongs(res.data.songs));
+            }
+        }).catch((error) => {
+            console.error('Error fetching songs:', error);
+        })
+    }, [dispatch])
 
     return (
         <section className="home-section">
@@ -37,14 +51,15 @@ const Home = () => {
             <div className="song-list">
                 {songs.map(song => (
                     <div 
-                        key={song.id} 
+                        key={song._id} 
                         className="song-item" 
                         onClick={() => handlePlaySong(song)}
                     >
                         <img 
-                            src={song.image} 
+                            src={getPosterUrl(song.poster)} 
                             alt={song.title} 
                             className="song-image" 
+                            onError={handleImageError}
                         />
                         <div className="song-details">
                             <div className="song-title">{song.title}</div>

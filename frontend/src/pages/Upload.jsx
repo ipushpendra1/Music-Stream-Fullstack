@@ -1,45 +1,42 @@
 import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
-import { addSong } from '../redux/features/songSlice'
 import { useNavigate } from 'react-router-dom'
 import Navigation from '../components/Navigation'
 import ThemeToggle from '../components/ThemeToggle'
 import './Upload.css'
+import axios from 'axios'
 
 const Upload = () => {
     const [title, setTitle] = useState('')
     const [artist, setArtist] = useState('')
-    const [_audioFile, setAudioFile] = useState(null) // Prefix with _ to ignore unused var warning
-    const [imageFile, setImageFile] = useState(null)
-    const dispatch = useDispatch()
+    const [isLoading, setIsLoading] = useState(false)
+    const [error, setError] = useState('')
     const navigate = useNavigate()
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
-        // In a real app, you would upload the files to a server here
-        // For now, we'll just add the song to the Redux store
-        const newSong = {
-            id: Date.now(), // temporary ID generation
-            title,
-            artist,
-            // Using a placeholder image if no image is selected
-            image: imageFile ? URL.createObjectURL(imageFile) : "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=800&auto=format&fit=crop"
-        }
-        dispatch(addSong(newSong))
-        navigate('/')
-    }
+        setIsLoading(true)
+        setError('')
 
-    const handleAudioUpload = (e) => {
-        const file = e.target.files[0]
-        if (file && file.type.startsWith('audio/')) {
-            setAudioFile(file)
-        }
-    }
-
-    const handleImageUpload = (e) => {
-        const file = e.target.files[0]
-        if (file && file.type.startsWith('image/')) {
-            setImageFile(file)
+        try {
+            const formData = new FormData();
+            formData.append('title', title);
+            formData.append('artist', artist);
+            formData.append('song', document.querySelector('#_audioFile').files[0]); 
+            
+            const response = await axios.post('http://localhost:3000/song/upload', formData, {
+                withCredentials: true,
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+            
+            setIsLoading(false)
+            navigate('/')
+            
+        } catch (error) {
+            console.error('Upload failed:', error)
+            setIsLoading(false)
+            setError(error.response?.data?.message || 'Upload failed. Please try again.')
         }
     }
 
@@ -56,6 +53,13 @@ const Upload = () => {
                 </div>
                 <ThemeToggle />
             </div>
+            
+            {error && (
+                <div className="error-message" style={{ color: 'red', margin: '10px 0', padding: '10px', backgroundColor: '#ffebee', borderRadius: '4px' }}>
+                    {error}
+                </div>
+            )}
+            
             <form className="upload-form" onSubmit={handleSubmit}>
                 <input
                     type="text"
@@ -63,6 +67,7 @@ const Upload = () => {
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     required
+                    disabled={isLoading}
                 />
                 <input
                     type="text"
@@ -70,29 +75,24 @@ const Upload = () => {
                     value={artist}
                     onChange={(e) => setArtist(e.target.value)}
                     required
+                    disabled={isLoading}
                 />
                 <div className="upload-buttons">
                     <label className="upload-button">
-                        Upload Audio File
+                        {isLoading ? 'Uploading...' : 'Upload Audio File'}
                         <input
+                          id='_audioFile'
                             type="file"
                             accept="audio/*"
-                            onChange={handleAudioUpload}
                             required
                             style={{ display: 'none' }}
-                        />
-                    </label>
-                    <label className="upload-button">
-                        Upload image File
-                        <input
-                            type="file"
-                            accept="image/*"
-                            onChange={handleImageUpload}
-                            style={{ display: 'none' }}
+                            disabled={isLoading}
                         />
                     </label>
                 </div>
-                <button type="submit" className="submit-button">Upload Music</button>
+                <button type="submit" className="submit-button" disabled={isLoading}>
+                    {isLoading ? 'Uploading...' : 'Upload Music'}
+                </button>
             </form>
             
             <Navigation />

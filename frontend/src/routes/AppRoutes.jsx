@@ -6,17 +6,18 @@ import Upload from '../pages/Upload'
 import Register from '../pages/Register'
 import Search from '../pages/Search'
 import Profile from '../pages/Profile'
+import Protected from '../components/Protected'
 
 const AppRoutes = () => {
     return (
         <Router>
             <Routes>
-                <Route path="/" element={<Home />} />
+                <Route path="/" element={<Protected><Home /></Protected>} />
                 <Route path='/login' element={<Login />} />
                 <Route path='/register' element={<Register />} />
-                <Route path='/search' element={<Search />} />
-                <Route path="/upload" element={<Upload />} />
-                <Route path="/profile" element={<Profile />} />
+                <Route path='/search' element={<Protected><Search /></Protected>} />
+                <Route path="/upload" element={<Protected><Upload /></Protected>} />
+                <Route path="/profile" element={<Protected><Profile /></Protected>} />
             </Routes>
         </Router>
     )

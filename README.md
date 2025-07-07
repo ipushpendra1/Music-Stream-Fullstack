@@ -17,6 +17,26 @@ A full-stack music streaming application with user authentication and profile ma
 - **Database Integration**: MongoDB with Mongoose for data persistence
 - **File Upload**: Support for profile image uploads
 
+## Default Poster Images
+
+The application uses a default poster image (`https://discussions.apple.com/content/attachment/592590040`) for all songs that don't have a custom poster. This ensures a consistent visual experience across the application.
+
+### How it works:
+
+1. **Database Level**: The song model has a default poster URL set in the schema
+2. **Backend**: New songs are automatically assigned the default poster when uploaded
+3. **Frontend**: Image components use fallback logic to display the default poster if the original fails to load
+4. **Migration**: Existing songs without posters can be updated using the migration script
+
+### Running the Migration
+
+To update existing songs in your database with the default poster:
+
+```bash
+cd backend
+npm run migrate-posters
+```
+
 ## Setup Instructions
 
 ### Backend Setup

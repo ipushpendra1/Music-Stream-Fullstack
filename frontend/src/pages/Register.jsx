@@ -1,12 +1,16 @@
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 
 import ThemeToggle from '../components/ThemeToggle';
 import './Register.css';
 import { Link } from "react-router-dom";
+import Login from './Login';
 import axios from 'axios';
+
 
 const Register = () => {
     const navigate = useNavigate();
+    const [error, setError] = useState("");
 
     const handleGoBack = () => {
         navigate(-1);
@@ -24,8 +28,14 @@ const Register = () => {
         },{
             withCredentials: true,
         }).then(response=>{
-            console.log(response.data)
-            navigate("/")
+            setError("");
+            navigate("/Login")
+        }).catch(err => {
+            if (err.response && err.response.data && err.response.data.message) {
+                setError(err.response.data.message);
+            } else {
+                setError("Registration failed. Please try again.");
+            }
         })
     }
 
@@ -52,7 +62,7 @@ const Register = () => {
 
             <div className="middle">
                 <h1>create new account</h1>
-
+                {error && <div style={{ color: 'red', marginBottom: '10px' }}>{error}</div>}
                 <form onSubmit={handleRegister} action="">
                     <input id="username" type="text" placeholder='Username' />
                     <input id="password" type="password" placeholder="Password"/>

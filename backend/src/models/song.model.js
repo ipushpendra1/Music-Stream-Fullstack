@@ -14,7 +14,7 @@ const songSchema = new mongoose.Schema({
      poster:{
         type:String,
         required:true,
-        default:"https://www.pikpng.com/pngl/m/25-253565_music-notes-png-transparent-background-music-notes-clipart.png"
+        default: "https://discussions.apple.com/content/attachment/592590040"
     },
     audio:{
         type:String,

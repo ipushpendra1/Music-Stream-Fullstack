@@ -85,10 +85,23 @@ export async function getSongById(req,res){
 export async function searchSong(req,res){
     const text = req.query.text;
     const song = await songModel.find({
-        title:{
-            $regex:text,
-            $options:"i"
-        },
+        $or: [
+            { title: { 
+                $regex: text,
+                 $options: "i" 
+                } 
+            },
+            { 
+                artist: {
+                     $regex: text, 
+                     $options: "i" 
+                    } 
+                }
+        ],
+     
+       
+    
+       
         
     })
     res.status(200).json({

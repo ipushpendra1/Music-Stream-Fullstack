@@ -2,9 +2,9 @@ import express from 'express';
 import multer from 'multer';
 import { upload, getSongs, getSongById, searchSong } from "../controllers/song.controller.js";
 import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
+import config from '../config/config.js';
 
-dotenv.config();
+
 
 const storage = multer.memoryStorage();
 const uploadMiddleware = multer({storage:storage});
@@ -20,7 +20,7 @@ router.use(async (req,res,next)=>{
         });
     }
     try{
-        const decoded = jwt.verify(token,process.env.JWT_SECRET);
+        const decoded = jwt.verify(token,config.JWT_SECRET);
         next();
     }catch(error){
         return res.status(401).json({

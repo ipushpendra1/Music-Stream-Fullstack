@@ -1,19 +1,15 @@
 import mongoose from "mongoose";
-import dotenv from 'dotenv';
-
-dotenv.config();
+import config from "../config/config.js";
 
 function connectDb() {
-    const mongoUri = process.env.MONGODB_URI || "mongodb://localhost:27017/stream-music";
-    
-    mongoose.connect(mongoUri)
-        .then(() => {
-            console.log("Connected to MongoDB at:", mongoUri);
-        })
-        .catch((error) => {
-            console.error("Error connecting to MongoDB:", error);
-            console.log("Make sure MongoDB is running on your system");
-        });
+    mongoose.connect(config.MONGODB_URL)
+    .then(()=>{
+        console.log("MongoDB connected successfully");
+        
+    }).catch((err)=>{
+      console.log("mongoDB connection Error ", err);
+      
+    })
 }
 
 export default connectDb;
